@@ -1,7 +1,6 @@
 #!/bin/bash
 # lazy man password generator
 # version 0.1
-#debug=y
 
 usage() {
     echo -e "Usage: $(basename "$0") [-l] [-s] [-h]"
@@ -50,19 +49,15 @@ if [ -n "$username" ]; then
 else
 	read username
 fi
-[ -n "$debug" ] && echo $username
 
 echo -n "[2]. Site information key: "
 read keyword
-[ -n "$debug" ] && echo $keyword
 
 echo -n "[3]. your passphrase: "
 read -s passphrase
 concat="strongpassword"
-[ -n "$debug" ] && echo $passphrase && echo -n ${username}${concat}${keyword}${concat}${passphrase}
 
 shapass=$(echo -n ${username}${concat}${keyword}${concat}${passphrase} | sha256sum | awk '{print $1}')
-[ -n "$debug" ] && echo $shapass
 
 pass=""
 for ((i=0; i<${#shapass}; i+=2)); do

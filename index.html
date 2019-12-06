@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Genpass - password generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #app {
+            width: 600px;
+            margin: auto;
+        }
+        div {
+            margin: 10px 0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.12.0/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.min.js"></script>
+</head>
+<body>
+   <div id="app">
+    <div class="action">
+        <el-input v-model="username" placeholder="username"></el-input>
+        <el-input v-model="keyword" placeholder="keyword"></el-input>
+        <el-input v-model="concat" placeholder="concat"></el-input>
+        <el-input type="password" v-model="passphrase" placeholder="passphrase"></el-input>
+        <el-checkbox v-model="complex">complex</el-checkbox>
+        <el-button @click="generate" size="medium" type="primary">generate</el-button>
+    </div>
+
+    <div>
+        <el-input v-model="password" placeholder="password" />
+    </div>
+   </div>
+   <script>
+       var app = new Vue({
+           el: '#app',
+           data: {
+             complex: true,
+             username: '',
+             concat: '',
+             keyword: '',
+             passphrase: '',
+             password: '',
+           },
+           methods: {
+             generate: function() {
+               var password = sha256.array([this.username, this.keyword, this.passphrase].join(this.concat)).filter(num => {
+                 return num < 127 && num > 32 && num !== 92 && num !== 96 && num !== 34 && num !== 39 &&
+                   (this.complex || ((num < 58 && num > 47) || (num < 91 && num > 64) || (num < 123 && num > 96)))
+               }).map(num => {
+                 return String.fromCharCode(num)
+               }).reverse().join('')
+               if (password.length < 7) {
+                 password = password + password
+               }
+               if (password.length > 14) {
+                 password = password.substr(0, 14)
+               }
+               this.password = password
+             }
+           }
+       });
+   </script>
+</body>
+</html>
