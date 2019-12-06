@@ -43,7 +43,6 @@ shift $((OPTIND-1))
 echo -n "[1]. your username: "
 # you can change username here and uncomment it
 # to avoid input username every time
-#username=feix
 if [ -n "$username" ]; then
 	echo $username
 else
